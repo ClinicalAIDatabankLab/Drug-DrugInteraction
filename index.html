@@ -243,11 +243,11 @@
               THE GRAND APOTHECARY
             </h1>
             <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
-              Clinical DDI Dispensary &amp; Multi-Drug Basket
+              Clinical DDI Dispensary &amp; Direct Interaction Explorer
             </span>
           </div>
           <p class="text-xs text-stone-400">
-            Inspect full DDI summaries in the right panel &amp; add multiple drugs to your <strong class="text-amber-200">Counter Basket</strong> to cross-check interactions
+            Use the <strong class="text-amber-200">Direct Drug-to-Drug Interaction </strong> which sorted by <strong class="text-rose-300"> X / D / C / B</strong> interactions
           </p>
         </div>
       </div>
@@ -293,16 +293,16 @@
         ></div>
       </div>
 
-      <!-- Right Action Controls: Prominent Counter Basket Button, Sound Toggle, Surprise Pick -->
+      <!-- Right Action Controls: Focus Direct DDI Banner Button, Sound Toggle, Surprise Pick -->
       <div class="flex items-center gap-2 shrink-0">
         <button
-          id="open-regimen-modal-btn"
+          id="focus-banner-search-btn"
           type="button"
           class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-extrabold text-xs flex items-center gap-2 transition shadow-lg shadow-amber-950/50"
         >
-          <i data-lucide="shopping-basket" class="w-4 h-4"></i>
-          <span>Counter Basket</span>
-          <span id="regimen-count-badge" class="px-2 py-0.5 rounded-full bg-stone-950 text-amber-300 font-mono-code font-bold text-[11px]">0</span>
+          <i data-lucide="git-compare" class="w-4 h-4"></i>
+          <span>Direct DDI Banner</span>
+          <span id="banner-count-badge" class="px-2 py-0.5 rounded-full bg-stone-950 text-amber-300 font-mono-code font-bold text-[11px]">0</span>
         </button>
 
         <button
@@ -342,7 +342,127 @@
     </div>
   </header>
 
-  <!-- Main Interactive Store Floor: Left = Apothecary Shelves & Counter Basket, Right = DDI Monograph Explorer -->
+  <!-- TOP BANNER: Direct Drug-to-Drug Interaction Checker -->
+  <section id="direct-ddi-banner" class="relative z-20 max-w-[1600px] w-full mx-auto px-4 lg:px-6 pt-5 pb-1">
+    <div class="rounded-2xl bg-gradient-to-br from-stone-900/95 via-stone-950/98 to-amber-950/40 border-2 border-amber-500/60 shadow-2xl backdrop-blur-xl p-4 sm:p-5 flex flex-col gap-4">
+      <!-- Top Banner Header & Search Bar -->
+      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+        <div class="flex items-start sm:items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 shrink-0 shadow-inner">
+            <i data-lucide="git-compare" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <h2 class="font-apothecary text-base sm:text-lg font-bold tracking-wider uppercase text-amber-200">
+                Direct Drug-to-Drug Interaction Banner
+              </h2>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono-code font-bold bg-stone-900 text-amber-300 border border-amber-500/40">
+                Priority Sort: X → D → C → B
+              </span>
+            </div>
+            <p class="text-xs text-stone-300 mt-0.5">
+              Search each drug name and add it below this banner. Drugs with the highest interaction level (<strong class="text-rose-400">X</strong> &gt; <strong class="text-orange-400">D</strong> &gt; <strong class="text-amber-300">C</strong> &gt; <strong class="text-sky-300">B</strong>) are kept upper, and only active interactions are shown.
+            </p>
+          </div>
+        </div>
+
+        <!-- Search & Add Drug Input in Top Banner -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full xl:max-w-2xl">
+          <div class="relative flex-1">
+            <div class="relative flex items-center">
+              <div class="absolute left-3.5 text-amber-400 pointer-events-none flex items-center">
+                <i data-lucide="search" class="w-4 h-4"></i>
+              </div>
+              <input
+                id="banner-drug-search-input"
+                type="text"
+                autocomplete="off"
+                placeholder="Search a drug name to add below banner (e.g., WARFARIN, ASPIRIN, FAVIPIRAVIR)..."
+                class="w-full pl-10 pr-20 py-2.5 rounded-xl bg-stone-950 border-2 border-amber-600/70 focus:border-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-500/20 text-sm text-amber-50 placeholder-stone-400 shadow-inner transition"
+              />
+              <button
+                id="banner-clear-input-btn"
+                type="button"
+                title="Clear search input"
+                class="hidden absolute right-2.5 px-2 py-1 rounded-lg text-xs text-stone-400 hover:text-amber-200 hover:bg-stone-800 transition"
+              >
+                Clear
+              </button>
+            </div>
+
+            <!-- Solid Black Autocomplete Suggestion List for Top Banner Search -->
+            <div
+              id="banner-search-autocomplete"
+              style="background-color: #000000;"
+              class="hidden absolute left-0 right-0 top-full mt-1.5 bg-black border border-amber-600/90 rounded-xl shadow-2xl overflow-hidden z-50 max-h-80 overflow-y-auto"
+            ></div>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button
+              id="banner-add-drug-btn"
+              type="button"
+              class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-extrabold text-xs sm:text-sm shadow-lg flex items-center justify-center gap-1.5 transition"
+            >
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>Add Drug</span>
+            </button>
+            <button
+              id="banner-export-csv-btn"
+              type="button"
+              title="Export direct interactions to CSV"
+              class="hidden px-3 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-200 border border-stone-700 text-xs font-semibold items-center gap-1.5 transition"
+            >
+              <i data-lucide="download" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span class="hidden sm:inline">Export CSV</span>
+            </button>
+            <button
+              id="banner-clear-all-btn"
+              type="button"
+              title="Remove all added drugs below banner"
+              class="hidden px-3 py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/70 text-rose-300 border border-rose-500/40 text-xs font-semibold transition"
+            >
+              Clear All
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BELOW THE BANNER PART 1: Direct Drug-to-Drug Interactions (Shown ABOVE Added Drugs; Sorted X -> D -> C -> B, highest interaction drugs upper; completely hidden if no interaction) -->
+      <div id="banner-interactions-wrapper" class="hidden border-t border-amber-700/50 pt-3.5 flex flex-col gap-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono-code text-xs font-extrabold">
+              DIRECT INTERACTIONS FOUND
+            </span>
+            <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white">
+              Sorted by Severity (<span class="text-rose-400">X</span> → <span class="text-orange-400">D</span> → <span class="text-amber-300">C</span> → <span class="text-sky-300">B</span>) • Highest-Risk Drugs Upper
+            </h3>
+          </div>
+          <div id="banner-risk-breakdown" class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono-code"></div>
+        </div>
+        <div id="banner-interactions-list" class="flex flex-col gap-2.5 max-h-[520px] overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- BELOW THE BANNER PART 2: Added Drugs List (Shown BELOW Direct Interactions; Sorted so drugs with highest interaction level X > D > C > B are kept upper) -->
+      <div id="banner-added-drugs-wrapper" class="hidden border-t border-amber-900/50 pt-3.5 flex flex-col gap-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">
+              Added Drugs (<span id="banner-added-count">0</span>)
+            </span>
+            <span class="text-[11px] text-stone-400">
+              — Ordered with highest interaction level (<strong class="text-rose-400">X</strong> → <strong class="text-orange-400">D</strong> → <strong class="text-amber-300">C</strong> → <strong class="text-sky-300">B</strong>) kept upper
+            </span>
+          </div>
+          <span id="banner-active-ddi-pill" class="hidden text-[11px] font-mono-code font-bold px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40"></span>
+        </div>
+        <div id="banner-added-drugs-list" class="flex flex-col gap-2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Interactive Store Floor: Left = Apothecary Shelves & Dispensing Counter, Right = DDI Monograph Explorer -->
   <main class="relative z-10 flex-1 max-w-[1600px] w-full mx-auto px-4 lg:px-6 py-5 grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
 
     <!-- LEFT COLUMN (5 Cols on XL): Interactive Drug Store Shelves & Dispensing Counter + Basket Tray -->
@@ -390,8 +510,8 @@
             <button type="button" data-shelf-filter="ALL" class="shelf-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-amber-500 text-stone-950 transition">
               All Bottles
             </button>
-            <button type="button" data-shelf-filter="BASKET" class="shelf-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-stone-900 hover:bg-stone-800 text-emerald-300 border border-emerald-500/30 transition">
-              In Basket
+            <button type="button" data-shelf-filter="BANNER" class="shelf-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-stone-900 hover:bg-stone-800 text-emerald-300 border border-emerald-500/30 transition">
+              In Top Banner
             </button>
             <button type="button" data-shelf-filter="X" class="shelf-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-stone-900 hover:bg-stone-800 text-rose-300 border border-rose-500/30 transition">
               Has Risk X (Avoid)
@@ -480,7 +600,7 @@
               FAVIPIRAVIR
             </h2>
             <p id="counter-drug-subtitle" class="text-xs text-stone-300 mt-1">
-              Select or search any medication to pull it from the shelf, inspect its complete interaction profile on the right, and check it in your Counter Basket.
+              Select or search any medication to pull it from the shelf, inspect its complete interaction profile on the right, or add it to the Top Direct DDI Banner.
             </p>
 
             <!-- Action Buttons for the Dispensed Bottle -->
@@ -491,7 +611,7 @@
                 class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs flex items-center gap-1.5 shadow transition"
               >
                 <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-                <span id="pin-to-regimen-label">Add to Counter Basket</span>
+                <span id="pin-to-regimen-label">Add to Top DDI Banner</span>
               </button>
               <button
                 id="replay-dispense-btn"
@@ -511,38 +631,6 @@
               </button>
             </div>
           </div>
-        </div>
-
-        <!-- Live Counter Basket Tray Preview & Multi-Drug Interaction Trigger -->
-        <div class="bg-stone-950/90 rounded-xl border border-amber-700/50 p-3.5 flex flex-col gap-3">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i data-lucide="shopping-basket" class="w-4 h-4 text-amber-400"></i>
-              <span class="text-xs font-bold uppercase tracking-wider text-amber-200">
-                Drugs Added to Counter Basket (<span id="counter-basket-count">0</span>)
-              </span>
-            </div>
-            <button
-              id="counter-clear-basket-btn"
-              type="button"
-              class="text-[11px] text-rose-400 hover:text-rose-300 underline font-medium"
-            >
-              Clear All
-            </button>
-          </div>
-
-          <!-- Bottle Mini-Shelf inside the Counter Basket -->
-          <div id="counter-basket-preview" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-2 gap-2 max-h-[210px] overflow-y-auto pr-1"></div>
-
-          <!-- Primary CTA: Open Counter Basket to Check Multi-Drug Interactions -->
-          <button
-            id="counter-open-basket-cta"
-            type="button"
-            class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-extrabold text-xs sm:text-sm shadow-xl flex items-center justify-center gap-2 transition"
-          >
-            <i data-lucide="search-check" class="w-4 h-4"></i>
-            <span>Open Basket &amp; Check Multi-Drug Interactions</span>
-          </button>
         </div>
       </div>
     </section>
@@ -742,130 +830,6 @@
       </div>
     </section>
   </main>
-
-  <!-- Counter Basket Modal: Add/Manage Multiple Drugs & Check Interaction of Each Drug with Other Drugs in the Basket -->
-  <div
-    id="regimen-modal"
-    class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5"
-  >
-    <div class="w-full max-w-5xl rounded-2xl bg-stone-950 border-2 border-amber-500/70 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-      <!-- Modal Header -->
-      <div class="p-4 sm:p-5 bg-gradient-to-r from-stone-900 via-stone-900 to-amber-950/60 border-b border-amber-800/60 flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-300 shrink-0">
-            <i data-lucide="shopping-basket" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h3 class="font-apothecary text-base sm:text-lg font-bold text-amber-200 uppercase tracking-wider">
-              Counter Basket — Multi-Drug Interaction Checker
-            </h3>
-            <p class="text-xs text-stone-300">
-              Select any drug in your basket below (or check all at once) to see whether it interacts with each of the other drugs in the basket
-            </p>
-          </div>
-        </div>
-        <button
-          id="close-regimen-modal-btn"
-          type="button"
-          class="px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-bold flex items-center gap-1.5 transition"
-        >
-          <span>Close Basket</span>
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-
-      <!-- Modal Body -->
-      <div class="p-4 sm:p-5 overflow-y-auto flex-1 flex flex-col gap-5">
-
-        <!-- Step 1: Drugs Currently in Basket + Quick Add Another Drug by Name -->
-        <div class="bg-stone-900/75 rounded-xl p-4 border border-stone-800">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-            <div>
-              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-400">
-                1. Drugs Added to Your Basket (<span id="modal-basket-count">0</span>)
-              </span>
-              <p class="text-[11px] text-stone-400 mt-0.5">
-                You can add more drugs from the store shelves or pick directly from the formulary list below:
-              </p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button
-                id="export-basket-csv-btn"
-                type="button"
-                class="px-2.5 py-1 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 text-xs font-semibold flex items-center gap-1.5 transition"
-              >
-                <i data-lucide="download" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>Export Basket CSV</span>
-              </button>
-              <button
-                id="clear-regimen-btn"
-                type="button"
-                class="px-2.5 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 border border-rose-500/40 text-xs font-semibold transition"
-              >
-                Clear Basket
-              </button>
-            </div>
-          </div>
-
-          <!-- Add Drug by Name inside Basket -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-3">
-            <input
-              id="regimen-filter-input"
-              type="text"
-              placeholder="Filter drug list by name..."
-              class="sm:w-56 px-3 py-2 rounded-xl bg-stone-950 border border-stone-700 text-xs text-amber-50 placeholder-stone-500 focus:border-amber-400 focus:outline-none"
-            />
-            <select
-              id="regimen-add-select"
-              aria-label="Choose a drug name to add to counter basket"
-              class="flex-1 px-3 py-2 rounded-xl bg-stone-950 border border-amber-700/60 text-xs font-semibold text-white focus:border-amber-400 focus:outline-none"
-            ></select>
-            <button
-              id="regimen-add-btn"
-              type="button"
-              class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold text-xs transition shrink-0"
-            >
-              + Add Drug to Basket
-            </button>
-          </div>
-
-          <!-- Visual Pills of Drugs in Basket -->
-          <div id="regimen-drugs-list" class="flex flex-wrap gap-2"></div>
-        </div>
-
-        <!-- Step 2: Option to Check Interaction of Each Drug with Other Drugs Added to the Basket -->
-        <div class="bg-stone-900/75 rounded-xl p-4 border border-amber-700/50 flex flex-col gap-3">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-stone-800 pb-3">
-            <div>
-              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">
-                2. Check Interaction of Each Drug with Other Basket Drugs
-              </span>
-              <p class="text-[11px] text-stone-300 mt-0.5">
-                Click <strong class="text-amber-200">"Check Interactions Now"</strong> or choose any individual drug from your basket below to inspect its exact interaction with every other drug in the basket:
-              </p>
-            </div>
-            <button
-              id="run-basket-check-btn"
-              type="button"
-              class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-stone-950 font-extrabold text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2 shrink-0 transition"
-            >
-              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-              <span>Check Interactions Now</span>
-            </button>
-          </div>
-
-          <!-- Per-Drug Selector Tabs ("All Basket Drugs" or Focus on a Specific Drug in the Basket) -->
-          <div class="flex flex-wrap items-center gap-1.5" id="basket-focus-tabs"></div>
-
-          <!-- Interaction Summary Banner -->
-          <div id="regimen-pair-summary" class="text-xs font-semibold text-stone-300"></div>
-
-          <!-- Drug-by-Drug Interaction Results Container -->
-          <div id="regimen-interactions-list" class="flex flex-col gap-3"></div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Embedded Complete DDI Dataset & Interactive Application Script -->
   <script>
@@ -1306,7 +1270,7 @@
         if (state.shelfLetter !== "ALL" && !d.name.toUpperCase().startsWith(state.shelfLetter)) {
           return false;
         }
-        if (state.shelfFilter === "BASKET" && !state.regimenBasket.includes(d.id)) return false;
+        if (state.shelfFilter === "BANNER" && !state.regimenBasket.includes(d.id)) return false;
         if (state.shelfFilter === "X" && d.counts.X === 0) return false;
         if (state.shelfFilter === "D" && d.counts.D === 0) return false;
         if (state.shelfFilter === "ING" && d.sameIngredCount === 0) return false;
@@ -1383,7 +1347,7 @@
                 >
                   ${
                     inBasket
-                      ? `<span class="absolute -top-1.5 right-0.5 z-20 px-1.5 py-0.2 rounded-full bg-emerald-500 text-stone-950 font-extrabold text-[8px] shadow">✓ Basket</span>`
+                      ? `<span class="absolute -top-1.5 right-0.5 z-20 px-1.5 py-0.2 rounded-full bg-emerald-500 text-stone-950 font-extrabold text-[8px] shadow">✓ In Banner</span>`
                       : ""
                   }
                   <!-- Hover Floating Tooltip above Bottle -->
@@ -1505,14 +1469,14 @@
       renderShelves();
       renderDispensedDrugCounter();
       renderDdiExplorer();
-      renderRegimenModal();
+      renderDirectDdiBanner();
 
       if (shouldScroll && counterPad && window.innerWidth < 1024) {
         counterPad.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
     }
 
-    // Update Dispensing Counter Specimen Details & Live Counter Basket Tray
+    // Update Dispensing Counter Specimen Details
     function renderDispensedDrugCounter() {
       const drugStat = DRUG_STATS[state.selectedDrugId];
       if (!drugStat) return;
@@ -1526,85 +1490,440 @@
       document.getElementById("counter-drug-subtitle").innerHTML =
         `Dispensed from shelf with <strong class="text-amber-300">${c.ALL.toLocaleString()}</strong> documented drug interactions (<span class="text-rose-400 font-semibold">${c.X} Avoid</span>, <span class="text-orange-400 font-semibold">${c.D} Modify</span>, <span class="text-amber-300 font-semibold">${c.C} Monitor</span>, <span class="text-sky-300 font-semibold">${c.B} No Action</span>, <span class="text-emerald-300 font-semibold">${c.A} Safe</span>).`;
 
-      const inBasket = state.regimenBasket.includes(drugStat.id);
+      const inBanner = state.regimenBasket.includes(drugStat.id);
       const pinBtn = document.getElementById("pin-to-regimen-btn");
       const pinLabel = document.getElementById("pin-to-regimen-label");
       const statusPill = document.getElementById("dispense-status-pill");
 
-      if (inBasket) {
+      if (inBanner) {
         pinBtn.className = "px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-rose-500/20 border border-emerald-500/50 hover:border-rose-500/50 text-emerald-300 hover:text-rose-300 font-bold text-xs flex items-center gap-1.5 transition";
-        pinLabel.textContent = "In Counter Basket ✓ (Remove)";
-        statusPill.textContent = "In Counter Basket ✓";
+        pinLabel.textContent = "In Top DDI Banner ✓ (Remove)";
+        statusPill.textContent = "Added to Top Banner ✓";
         statusPill.className = "text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-medium";
       } else {
         pinBtn.className = "px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs flex items-center gap-1.5 shadow transition";
-        pinLabel.textContent = "Add to Counter Basket";
+        pinLabel.textContent = "Add to Top DDI Banner";
         statusPill.textContent = "Dispensed from Shelf";
         statusPill.className = "text-[11px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium";
       }
+    }
 
-      // Render Live Counter Basket Tray Preview
-      const count = state.regimenBasket.length;
-      document.getElementById("counter-basket-count").textContent = count;
-      document.getElementById("regimen-count-badge").textContent = count;
-      const modalCountEl = document.getElementById("modal-basket-count");
-      if (modalCountEl) modalCountEl.textContent = count;
-
-      const previewEl = document.getElementById("counter-basket-preview");
-      if (count === 0) {
-        previewEl.innerHTML = `
-          <div class="col-span-full py-4 px-3 text-center rounded-lg bg-stone-900/60 border border-dashed border-stone-700 text-xs text-stone-400">
-            Your Counter Basket is empty. Click any bottle on the shelves or "+ Add to Counter Basket" to add multiple drugs and cross-check their interactions.
-          </div>
-        `;
+    // Helper: Add or Remove a Drug in the Top Direct DDI Banner
+    function addDrugToDirectBanner(drugId, fromBannerInput = false) {
+      const drugStat = DRUG_STATS[drugId];
+      if (!drugStat) return;
+      if (!state.regimenBasket.includes(drugId)) {
+        state.regimenBasket.push(drugId);
+        playApothecarySound("dispense");
+        showToast(`Added ${drugStat.name} below the Direct DDI Banner`, "emerald");
       } else {
-        previewEl.innerHTML = state.regimenBasket.map(id => {
-          const d = DRUG_STATS[id];
-          const isCurrent = id === state.selectedDrugId;
-          return `
-            <div class="flex items-center justify-between gap-2 p-2 rounded-lg ${isCurrent ? "bg-amber-950/40 border-amber-400/70" : "bg-stone-900/90 border-amber-700/40"} border hover:border-amber-400 transition">
+        playApothecarySound("click");
+        showToast(`${drugStat.name} is already added below the banner`);
+      }
+      if (fromBannerInput) {
+        const bannerInput = document.getElementById("banner-drug-search-input");
+        const bannerAc = document.getElementById("banner-search-autocomplete");
+        const bannerClearBtn = document.getElementById("banner-clear-input-btn");
+        if (bannerInput) bannerInput.value = "";
+        if (bannerAc) bannerAc.classList.add("hidden");
+        if (bannerClearBtn) bannerClearBtn.classList.add("hidden");
+      }
+      renderShelves();
+      renderDispensedDrugCounter();
+      renderDdiExplorer();
+      renderDirectDdiBanner();
+    }
+
+    function removeDrugFromDirectBanner(drugId) {
+      const drugStat = DRUG_STATS[drugId];
+      state.regimenBasket = state.regimenBasket.filter(x => x !== drugId);
+      playApothecarySound("click");
+      if (drugStat) showToast(`Removed ${drugStat.name} from the Direct DDI Banner`);
+      renderShelves();
+      renderDispensedDrugCounter();
+      renderDdiExplorer();
+      renderDirectDdiBanner();
+    }
+
+    // Compute Direct Interactions (X, D, C, B only) & Per-Drug Interaction Severity Ranks among Added Banner Drugs
+    function computeBannerDirectDdiData() {
+      const addedIds = [...state.regimenBasket];
+      const activeRiskRank = { X: 4, D: 3, C: 2, B: 1 };
+      const rankToCode = { 4: "X", 3: "D", 2: "C", 1: "B", 0: "NONE" };
+
+      // Per-drug interaction profile against the other added drugs
+      const drugProfile = {};
+      addedIds.forEach(id => {
+        drugProfile[id] = {
+          id,
+          drug: DRUG_STATS[id],
+          maxRank: 0,
+          maxRiskCode: "NONE",
+          counts: { X: 0, D: 0, C: 0, B: 0, total: 0 },
+          interactingPartnerIds: new Set()
+        };
+      });
+
+      const rawInteractions = [];
+      for (let i = 0; i < addedIds.length; i++) {
+        for (let j = i + 1; j < addedIds.length; j++) {
+          const u = addedIds[i];
+          const v = addedIds[j];
+          // Only include real interactions in X, D, C, B (ignore A or non-interacting pairs)
+          const matches = (ADJ[u] || []).filter(
+            edge => edge.partnerId === v && activeRiskRank[edge.risk] !== undefined
+          );
+          matches.forEach(edge => {
+            const rRank = activeRiskRank[edge.risk];
+            if (rRank > drugProfile[u].maxRank) {
+              drugProfile[u].maxRank = rRank;
+              drugProfile[u].maxRiskCode = edge.risk;
+            }
+            if (rRank > drugProfile[v].maxRank) {
+              drugProfile[v].maxRank = rRank;
+              drugProfile[v].maxRiskCode = edge.risk;
+            }
+            drugProfile[u].counts[edge.risk]++;
+            drugProfile[u].counts.total++;
+            drugProfile[u].interactingPartnerIds.add(v);
+
+            drugProfile[v].counts[edge.risk]++;
+            drugProfile[v].counts.total++;
+            drugProfile[v].interactingPartnerIds.add(u);
+
+            rawInteractions.push({
+              u,
+              v,
+              risk: edge.risk,
+              riskRank: rRank,
+              sIdx: edge.sIdx,
+              mIdx: edge.mIdx,
+              gIdx: edge.gIdx,
+              rawPairs: edge.rawPairs
+            });
+          });
+        }
+      }
+
+      // Helper to compare two added drugs so the drug with the highest interaction level (X > D > C > B) is kept upper
+      const compareAddedDrugs = (idA, idB) => {
+        const pA = drugProfile[idA];
+        const pB = drugProfile[idB];
+        if (pB.maxRank !== pA.maxRank) return pB.maxRank - pA.maxRank;
+        if (pB.counts.X !== pA.counts.X) return pB.counts.X - pA.counts.X;
+        if (pB.counts.D !== pA.counts.D) return pB.counts.D - pA.counts.D;
+        if (pB.counts.C !== pA.counts.C) return pB.counts.C - pA.counts.C;
+        if (pB.counts.B !== pA.counts.B) return pB.counts.B - pA.counts.B;
+        if (pB.counts.total !== pA.counts.total) return pB.counts.total - pA.counts.total;
+        return pA.drug.name.localeCompare(pB.drug.name);
+      };
+
+      // Sort added drugs so drugs with highest interaction level are kept upper
+      const sortedAddedDrugs = [...addedIds].sort(compareAddedDrugs).map(id => drugProfile[id]);
+
+      // For each interaction card, order the two drugs so the drug with the higher interaction level appears first
+      const sortedInteractions = rawInteractions.map(item => {
+        const firstIsU = compareAddedDrugs(item.u, item.v) <= 0;
+        const primaryId = firstIsU ? item.u : item.v;
+        const secondaryId = firstIsU ? item.v : item.u;
+        return {
+          ...item,
+          primaryId,
+          secondaryId,
+          primaryProfile: drugProfile[primaryId],
+          secondaryProfile: drugProfile[secondaryId]
+        };
+      });
+
+      // Sort interactions strictly by X -> D -> C -> B, keeping drugs with highest interaction level upper
+      sortedInteractions.sort((a, b) => {
+        if (b.riskRank !== a.riskRank) return b.riskRank - a.riskRank;
+        const cmpPrimary = compareAddedDrugs(a.primaryId, b.primaryId);
+        if (cmpPrimary !== 0) return cmpPrimary;
+        const cmpSecondary = compareAddedDrugs(a.secondaryId, b.secondaryId);
+        if (cmpSecondary !== 0) return cmpSecondary;
+        return b.rawPairs - a.rawPairs;
+      });
+
+      return {
+        sortedAddedDrugs,
+        sortedInteractions,
+        rankToCode
+      };
+    }
+
+    // Render Top Direct Drug-to-Drug Interaction Banner & Below-Banner Added Drugs + Interactions
+    function renderDirectDdiBanner() {
+      const count = state.regimenBasket.length;
+      const badgeEl = document.getElementById("banner-count-badge");
+      if (badgeEl) badgeEl.textContent = count;
+
+      const addedWrapper = document.getElementById("banner-added-drugs-wrapper");
+      const addedCountEl = document.getElementById("banner-added-count");
+      const addedListEl = document.getElementById("banner-added-drugs-list");
+      const activeDdiPill = document.getElementById("banner-active-ddi-pill");
+      const clearAllBtn = document.getElementById("banner-clear-all-btn");
+      const exportCsvBtn = document.getElementById("banner-export-csv-btn");
+
+      const interactionsWrapper = document.getElementById("banner-interactions-wrapper");
+      const interactionsListEl = document.getElementById("banner-interactions-list");
+      const breakdownEl = document.getElementById("banner-risk-breakdown");
+
+      if (count === 0) {
+        addedWrapper.classList.add("hidden");
+        addedListEl.innerHTML = "";
+        interactionsWrapper.classList.add("hidden");
+        interactionsListEl.innerHTML = "";
+        clearAllBtn.classList.add("hidden");
+        exportCsvBtn.classList.add("hidden");
+        exportCsvBtn.classList.remove("flex");
+        return;
+      }
+
+      clearAllBtn.classList.remove("hidden");
+      addedWrapper.classList.remove("hidden");
+      addedCountEl.textContent = count;
+
+      const { sortedAddedDrugs, sortedInteractions } = computeBannerDirectDdiData();
+
+      // Render Added Drugs below the banner (ordered upper-to-lower by highest interaction level X -> D -> C -> B)
+      addedListEl.innerHTML = sortedAddedDrugs.map((prof, idx) => {
+        const d = prof.drug;
+        const hasActiveDdi = prof.maxRank > 0;
+        const meta = hasActiveDdi ? RISK_META[prof.maxRiskCode] : null;
+
+        const rowBorder = hasActiveDdi ? meta.borderCol : "border-stone-800";
+        const rowBg = hasActiveDdi ? meta.cardBg : "bg-stone-950/85";
+
+        const breakdownBadges = ["X", "D", "C", "B"]
+          .filter(r => prof.counts[r] > 0)
+          .map(r => {
+            const rm = RISK_META[r];
+            return `<span class="px-2 py-0.5 rounded-md text-[10px] font-mono-code font-extrabold ${rm.badgeBg}">${r}: ${prof.counts[r]}</span>`;
+          })
+          .join("");
+
+        return `
+          <div class="p-2.5 sm:px-3.5 rounded-xl border ${rowBorder} ${rowBg} flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 transition">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-6 h-6 rounded-lg bg-stone-900 border border-stone-700 text-[11px] font-mono-code font-bold text-amber-300 flex items-center justify-center shrink-0">
+                #${idx + 1}
+              </span>
+              <div class="w-6 h-9 shrink-0">${createBottleSvg(d, "banner")}</div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs sm:text-sm font-extrabold text-white truncate">${escapeHtml(d.name)}</span>
+                  ${
+                    hasActiveDdi
+                      ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${meta.badgeBg} shadow-sm">
+                           Highest Interaction: Risk ${meta.code} (${meta.shortLabel})
+                         </span>`
+                      : ""
+                  }
+                </div>
+                <div class="text-[10px] text-stone-400 font-mono-code">
+                  IR_generic: ${d.codes.slice(0, 3).join(", ")}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0 flex-wrap">
+              ${breakdownBadges}
               <button
                 type="button"
-                data-counter-inspect="${id}"
-                class="counter-inspect-btn flex items-center gap-2 min-w-0 text-left flex-1"
-                title="Click to inspect ${escapeHtml(d.name)} in the right DDI panel"
+                data-banner-inspect="${d.id}"
+                class="banner-inspect-btn px-2.5 py-1 rounded-lg bg-stone-900 hover:bg-amber-500 hover:text-stone-950 text-amber-300 border border-amber-500/40 text-[11px] font-semibold transition"
+                title="Inspect ${escapeHtml(d.name)} on the dispensing counter"
               >
-                <div class="w-7 h-10 shrink-0">${createBottleSvg(d, "mini")}</div>
-                <div class="truncate">
-                  <div class="text-[11px] font-bold text-amber-100 truncate">${escapeHtml(d.name)}</div>
-                  <div class="text-[9px] text-stone-400 font-mono-code">${d.counts.ALL} DDIs</div>
-                </div>
+                Inspect Monograph
               </button>
               <button
                 type="button"
-                data-counter-remove="${id}"
-                title="Remove from basket"
-                class="counter-remove-btn p-1 rounded hover:bg-rose-500/20 text-stone-400 hover:text-rose-300 text-xs font-bold shrink-0"
+                data-banner-remove="${d.id}"
+                class="banner-remove-btn px-2.5 py-1 rounded-lg bg-stone-900 hover:bg-rose-500 hover:text-white text-stone-300 border border-stone-700 text-[11px] font-extrabold transition"
+                title="Remove ${escapeHtml(d.name)}"
               >
-                ✕
+                ✕ Remove
               </button>
             </div>
-          `;
-        }).join("");
+          </div>
+        `;
+      }).join("");
 
-        previewEl.querySelectorAll(".counter-inspect-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const inspectId = parseInt(btn.getAttribute("data-counter-inspect"), 10);
-            dispenseDrugFromShelf(inspectId, null, false, false);
-          });
+      addedListEl.querySelectorAll(".banner-inspect-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = parseInt(btn.getAttribute("data-banner-inspect"), 10);
+          dispenseDrugFromShelf(id, null, false, false);
         });
+      });
 
-        previewEl.querySelectorAll(".counter-remove-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const rmId = parseInt(btn.getAttribute("data-counter-remove"), 10);
-            state.regimenBasket = state.regimenBasket.filter(x => x !== rmId);
-            if (state.basketFocusDrugId === rmId) state.basketFocusDrugId = "ALL";
-            renderShelves();
-            renderDispensedDrugCounter();
-            renderDdiExplorer();
-            renderRegimenModal();
-          });
+      addedListEl.querySelectorAll(".banner-remove-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = parseInt(btn.getAttribute("data-banner-remove"), 10);
+          removeDrugFromDirectBanner(id);
         });
+      });
+
+      // CRITICAL REQUIREMENT: "if there is no interaction nothing shown and if there is interaction sorted them based on the X/D/C/B and keep drugs with highest interaction level upper"
+      if (sortedInteractions.length === 0) {
+        activeDdiPill.classList.add("hidden");
+        activeDdiPill.textContent = "";
+        exportCsvBtn.classList.add("hidden");
+        exportCsvBtn.classList.remove("flex");
+        interactionsWrapper.classList.add("hidden");
+        interactionsListEl.innerHTML = "";
+        breakdownEl.innerHTML = "";
+        return;
+      }
+
+      // Show interactions when at least 1 interaction exists
+      activeDdiPill.classList.remove("hidden");
+      activeDdiPill.textContent = `${sortedInteractions.length} Active Interaction${sortedInteractions.length === 1 ? "" : "s"}`;
+      exportCsvBtn.classList.remove("hidden");
+      exportCsvBtn.classList.add("flex");
+      interactionsWrapper.classList.remove("hidden");
+
+      const tierCounts = { X: 0, D: 0, C: 0, B: 0 };
+      sortedInteractions.forEach(item => {
+        if (tierCounts[item.risk] !== undefined) tierCounts[item.risk]++;
+      });
+
+      breakdownEl.innerHTML = ["X", "D", "C", "B"]
+        .filter(r => tierCounts[r] > 0)
+        .map(r => {
+          const rm = RISK_META[r];
+          return `<span class="px-2.5 py-0.5 rounded-md font-extrabold ${rm.badgeBg}">Risk ${r} (${rm.shortLabel}): ${tierCounts[r]}</span>`;
+        })
+        .join("");
+
+      interactionsListEl.innerHTML = sortedInteractions.map(item => {
+        const meta = RISK_META[item.risk] || RISK_META.C;
+        const drugA = item.primaryProfile.drug;
+        const drugB = item.secondaryProfile.drug;
+        const ingTxt = item.gIdx > 0 ? DB.ingreds[item.gIdx] : "";
+
+        return `
+          <article class="p-3.5 rounded-xl border-2 ${meta.borderCol} ${meta.cardBg} flex flex-col gap-2.5 shadow-lg">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-800/80 pb-2">
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <span class="px-2.5 py-1 rounded-md ${meta.badgeBg} font-extrabold text-xs uppercase shadow">
+                  RISK ${meta.code} • ${meta.shortLabel}
+                </span>
+                <div class="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-white">
+                  <span class="text-amber-300">${escapeHtml(drugA.name)}</span>
+                  <span class="text-amber-400 mx-1">⇄</span>
+                  <span class="text-white">${escapeHtml(drugB.name)}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-[10px] font-mono-code text-stone-300 px-2 py-0.5 rounded bg-stone-950/80 border border-stone-800">
+                  ${meta.title} • ${item.rawPairs} formulation pair${item.rawPairs === 1 ? "" : "s"}
+                </span>
+              </div>
+            </div>
+            ${
+              ingTxt
+                ? `<div class="px-2.5 py-1 rounded bg-purple-950/70 border border-purple-500/50 text-purple-200 text-[11px] font-semibold">
+                     Duplicate Active Ingredient Prescribed: ${escapeHtml(ingTxt)}
+                   </div>`
+                : ""
+            }
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 text-xs">
+              <div class="lg:col-span-5 bg-stone-950/80 p-2.5 rounded-lg border border-stone-800">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-0.5">Interaction Summary</div>
+                <p class="text-stone-100 leading-relaxed">${escapeHtml(DB.summaries[item.sIdx])}</p>
+              </div>
+              <div class="lg:col-span-7 bg-stone-950/80 p-2.5 rounded-lg border border-stone-800">
+                <div class="text-[10px] font-bold uppercase tracking-wider ${meta.textCol} mb-0.5">Clinical Management (${meta.title})</div>
+                <p class="text-stone-300 leading-relaxed">${formatManagementHtml(DB.managements[item.mIdx])}</p>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // Autocomplete Dropdown for Top Direct DDI Banner Search Box (Solid Black Background)
+    function renderBannerSearchAutocomplete(query) {
+      const box = document.getElementById("banner-search-autocomplete");
+      const clearBtn = document.getElementById("banner-clear-input-btn");
+      const q = query.trim().toUpperCase();
+
+      clearBtn.classList.toggle("hidden", q.length === 0);
+
+      if (!q) {
+        box.classList.add("hidden");
+        return;
+      }
+
+      const prefixMatches = [];
+      const subMatches = [];
+      for (let i = 0; i < DRUG_STATS.length; i++) {
+        const d = DRUG_STATS[i];
+        const up = d.name.toUpperCase();
+        if (up.startsWith(q)) prefixMatches.push(d);
+        else if (up.includes(q)) subMatches.push(d);
+      }
+      const matches = [...prefixMatches, ...subMatches].slice(0, 12);
+
+      if (matches.length === 0) {
+        box.innerHTML = `<div class="p-3.5 text-xs text-stone-400 bg-black">No drug in the formulary matches "${escapeHtml(query)}".</div>`;
+        box.classList.remove("hidden");
+        return;
+      }
+
+      box.innerHTML = matches.map(d => {
+        const c = d.counts;
+        const inBanner = state.regimenBasket.includes(d.id);
+        return `
+          <button
+            type="button"
+            data-banner-ac-id="${d.id}"
+            class="banner-ac-item-btn w-full text-left px-3.5 py-2.5 bg-black hover:bg-stone-900 border-b border-stone-800 last:border-none flex items-center justify-between gap-2 transition"
+          >
+            <div>
+              <div class="text-xs font-bold text-amber-100">${escapeHtml(d.name)}</div>
+              <div class="text-[10px] text-stone-400 font-mono-code">
+                IR_generic: ${d.codes.slice(0, 3).join(", ")} • ${c.ALL} total DDIs
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0 text-[10px] font-mono-code">
+              ${c.X > 0 ? `<span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40">X:${c.X}</span>` : ""}
+              ${c.D > 0 ? `<span class="px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/40">D:${c.D}</span>` : ""}
+              ${c.C > 0 ? `<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">C:${c.C}</span>` : ""}
+              ${inBanner ? `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-sans font-bold">✓ Added</span>` : `<span class="px-2 py-0.5 rounded bg-amber-500 text-stone-950 font-sans font-bold">+ Add Below Banner</span>`}
+            </div>
+          </button>
+        `;
+      }).join("");
+
+      box.classList.remove("hidden");
+
+      box.querySelectorAll(".banner-ac-item-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = parseInt(btn.getAttribute("data-banner-ac-id"), 10);
+          addDrugToDirectBanner(id, true);
+        });
+      });
+    }
+
+    function triggerBannerAddDrug() {
+      const input = document.getElementById("banner-drug-search-input");
+      const q = input.value.trim().toUpperCase();
+      document.getElementById("banner-search-autocomplete").classList.add("hidden");
+      if (!q) {
+        showToast("Type a drug name in the top banner search box to add it!", "rose");
+        input.focus();
+        return;
+      }
+      let match = DRUG_STATS.find(d => d.name.toUpperCase() === q);
+      if (!match) match = DRUG_STATS.find(d => d.name.toUpperCase().startsWith(q));
+      if (!match) match = DRUG_STATS.find(d => d.name.toUpperCase().includes(q));
+
+      if (match) {
+        addDrugToDirectBanner(match.id, true);
+      } else {
+        showToast(`No drug matching "${q}" found in Formulary.`, "rose");
       }
     }
 
@@ -1720,7 +2039,7 @@
         const summaryText = DB.summaries[item.sIdx];
         const managementText = DB.managements[item.mIdx];
         const sameIngredText = item.gIdx > 0 ? DB.ingreds[item.gIdx] : "";
-        const partnerInBasket = state.regimenBasket.includes(item.partnerId);
+        const partnerInBanner = state.regimenBasket.includes(item.partnerId);
 
         return `
           <article class="rounded-xl border ${meta.borderCol} ${meta.cardBg} p-3.5 transition hover:border-amber-400/60">
@@ -1742,15 +2061,15 @@
                 </span>
                 <button
                   type="button"
-                  data-add-partner-basket="${item.partnerId}"
-                  class="add-partner-basket-btn px-2 py-1 rounded-lg ${
-                    partnerInBasket
+                  data-add-partner-banner="${item.partnerId}"
+                  class="add-partner-banner-btn px-2 py-1 rounded-lg ${
+                    partnerInBanner
                       ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
                       : "bg-stone-900 hover:bg-emerald-500 hover:text-stone-950 text-emerald-300 border border-emerald-500/40"
                   } text-[11px] font-semibold transition"
-                  title="Add ${escapeHtml(partnerName)} to Counter Basket"
+                  title="Add ${escapeHtml(partnerName)} to Top Direct DDI Banner"
                 >
-                  ${partnerInBasket ? "✓ In Basket" : "+ Basket"}
+                  ${partnerInBanner ? "✓ In Banner" : "+ Add to Banner"}
                 </button>
                 <button
                   type="button"
@@ -1803,25 +2122,15 @@
         });
       });
 
-      container.querySelectorAll(".add-partner-basket-btn").forEach(btn => {
+      container.querySelectorAll(".add-partner-banner-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-          const pid = parseInt(btn.getAttribute("data-add-partner-basket"), 10);
-          if (!state.regimenBasket.includes(pid)) {
-            state.regimenBasket.push(pid);
-            playApothecarySound("click");
-            showToast(`Added ${DB.drugs[pid]} to Counter Basket`, "emerald");
-          } else {
-            showToast(`${DB.drugs[pid]} is already in your Counter Basket`);
-          }
-          renderShelves();
-          renderDispensedDrugCounter();
-          renderDdiExplorer();
-          renderRegimenModal();
+          const pid = parseInt(btn.getAttribute("data-add-partner-banner"), 10);
+          addDrugToDirectBanner(pid, false);
         });
       });
     }
 
-    // Autocomplete Search Dropdown Logic
+    // Autocomplete Search Dropdown Logic (Header Shelf Search)
     function renderSearchAutocomplete(query) {
       const box = document.getElementById("search-autocomplete");
       const clearBtn = document.getElementById("clear-search-btn");
@@ -1852,7 +2161,7 @@
 
       box.innerHTML = matches.map(d => {
         const c = d.counts;
-        const inBasket = state.regimenBasket.includes(d.id);
+        const inBanner = state.regimenBasket.includes(d.id);
         return `
           <button
             type="button"
@@ -1869,7 +2178,7 @@
               ${c.X > 0 ? `<span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40">X:${c.X}</span>` : ""}
               ${c.D > 0 ? `<span class="px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/40">D:${c.D}</span>` : ""}
               ${c.C > 0 ? `<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">C:${c.C}</span>` : ""}
-              ${inBasket ? `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-sans font-bold">✓ In Basket</span>` : `<span class="px-2 py-0.5 rounded bg-amber-500 text-stone-950 font-sans font-bold">Pull from Shelf →</span>`}
+              ${inBanner ? `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-sans font-bold">✓ In Banner</span>` : `<span class="px-2 py-0.5 rounded bg-amber-500 text-stone-950 font-sans font-bold">Pull from Shelf →</span>`}
             </div>
           </button>
         `;
@@ -1904,225 +2213,6 @@
       });
     }
 
-    // Render Enhanced Multi-Drug Counter Basket Modal (From Previously Generated HTML)
-    function renderRegimenModal() {
-      const count = state.regimenBasket.length;
-      document.getElementById("regimen-count-badge").textContent = count;
-      const modalCountEl = document.getElementById("modal-basket-count");
-      if (modalCountEl) modalCountEl.textContent = count;
-
-      const listEl = document.getElementById("regimen-drugs-list");
-      const focusTabsEl = document.getElementById("basket-focus-tabs");
-      const resultsEl = document.getElementById("regimen-interactions-list");
-      const summaryEl = document.getElementById("regimen-pair-summary");
-
-      if (count === 0) {
-        listEl.innerHTML = `<span class="text-xs text-stone-400 italic">No drugs in the basket yet. Click bottles on the shelves or use "+ Add Drug to Basket" above.</span>`;
-        focusTabsEl.innerHTML = "";
-        summaryEl.innerHTML = `<span class="text-amber-300">Add at least 2 drugs to your basket to check their interactions with each other.</span>`;
-        resultsEl.innerHTML = "";
-        return;
-      }
-
-      // Render Basket Drug Pills with Remove buttons
-      listEl.innerHTML = state.regimenBasket.map(id => {
-        const d = DRUG_STATS[id];
-        return `
-          <div class="px-3 py-1.5 rounded-xl bg-stone-950 border border-amber-500/60 text-xs font-bold text-amber-100 flex items-center gap-2 shadow">
-            <div class="w-5 h-7 shrink-0">${createBottleSvg(d, "pill")}</div>
-            <span>${escapeHtml(d.name)}</span>
-            <button
-              type="button"
-              data-remove-regimen="${id}"
-              title="Remove ${escapeHtml(d.name)} from basket"
-              class="remove-regimen-btn ml-1 px-1.5 py-0.5 rounded bg-stone-800 hover:bg-rose-500 hover:text-white text-stone-300 text-[10px] font-extrabold transition"
-            >
-              ✕
-            </button>
-          </div>
-        `;
-      }).join("");
-
-      listEl.querySelectorAll(".remove-regimen-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = parseInt(btn.getAttribute("data-remove-regimen"), 10);
-          state.regimenBasket = state.regimenBasket.filter(x => x !== id);
-          if (state.basketFocusDrugId === id) state.basketFocusDrugId = "ALL";
-          renderShelves();
-          renderDispensedDrugCounter();
-          renderDdiExplorer();
-          renderRegimenModal();
-        });
-      });
-
-      if (count < 2) {
-        focusTabsEl.innerHTML = "";
-        summaryEl.innerHTML = `<span class="text-amber-300">You have <strong>1</strong> drug (${escapeHtml(DRUG_STATS[state.regimenBasket[0]].name)}) in the basket. Add at least <strong>1 more drug</strong> to check interactions between them.</span>`;
-        resultsEl.innerHTML = "";
-        return;
-      }
-
-      if (state.basketFocusDrugId !== "ALL" && !state.regimenBasket.includes(state.basketFocusDrugId)) {
-        state.basketFocusDrugId = "ALL";
-      }
-
-      // Render Focus Drug Selector Tabs so user can check interaction of EACH drug with the other drugs in the basket
-      const tabsHtml = [
-        `<button
-          type="button"
-          data-focus-drug="ALL"
-          class="basket-focus-btn px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${
-            state.basketFocusDrugId === "ALL"
-              ? "bg-amber-400 text-stone-950 shadow-md"
-              : "bg-stone-950 hover:bg-stone-800 text-stone-300 border border-stone-700"
-          }"
-        >
-          Check All Basket Drugs (${count})
-        </button>`,
-        ...state.regimenBasket.map(id => {
-          const d = DRUG_STATS[id];
-          const active = state.basketFocusDrugId === id;
-          return `<button
-            type="button"
-            data-focus-drug="${id}"
-            class="basket-focus-btn px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-              active
-                ? "bg-amber-400 text-stone-950 shadow-md"
-                : "bg-stone-950 hover:bg-stone-800 text-amber-200 border border-amber-700/50"
-            }"
-          >
-            <span>Check: ${escapeHtml(d.name)} vs. Others</span>
-          </button>`;
-        })
-      ].join("");
-
-      focusTabsEl.innerHTML = tabsHtml;
-      focusTabsEl.querySelectorAll(".basket-focus-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const val = btn.getAttribute("data-focus-drug");
-          state.basketFocusDrugId = val === "ALL" ? "ALL" : parseInt(val, 10);
-          renderRegimenModal();
-        });
-      });
-
-      const riskRank = { X: 5, D: 4, C: 3, B: 2, A: 1 };
-      const drugsToInspect = state.basketFocusDrugId === "ALL"
-        ? state.regimenBasket
-        : [state.basketFocusDrugId];
-
-      let totalInteractingPairs = 0;
-      let totalSafePairs = 0;
-      for (let i = 0; i < state.regimenBasket.length; i++) {
-        for (let j = i + 1; j < state.regimenBasket.length; j++) {
-          const u = state.regimenBasket[i];
-          const v = state.regimenBasket[j];
-          const matches = (ADJ[u] || []).filter(edge => edge.partnerId === v);
-          if (matches.length > 0) totalInteractingPairs++;
-          else totalSafePairs++;
-        }
-      }
-
-      summaryEl.innerHTML = `
-        <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-stone-950 border border-stone-800">
-          <span>Basket Summary (<strong class="text-white">${count} drugs</strong>, <strong class="text-white">${totalInteractingPairs + totalSafePairs} unique pairs</strong>):</span>
-          <span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/50 text-rose-300 font-bold">
-            ⚠️ ${totalInteractingPairs} Interacting Pair(s)
-          </span>
-          <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 font-bold">
-            ✓ ${totalSafePairs} Pair(s) with No Interaction
-          </span>
-        </div>
-      `;
-
-      resultsEl.innerHTML = drugsToInspect.map(uId => {
-        const drugU = DRUG_STATS[uId];
-        const otherIds = state.regimenBasket.filter(id => id !== uId);
-
-        const partnerRowsHtml = otherIds.map(vId => {
-          const drugV = DRUG_STATS[vId];
-          const matches = [...(ADJ[uId] || []).filter(edge => edge.partnerId === vId)];
-          matches.sort((a, b) => (riskRank[b.risk] || 0) - (riskRank[a.risk] || 0));
-
-          if (matches.length === 0) {
-            return `
-              <div class="p-3 rounded-xl bg-emerald-950/25 border border-emerald-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div class="flex items-center gap-2.5 flex-wrap">
-                  <span class="px-2.5 py-0.5 rounded-md bg-emerald-400 text-stone-950 font-extrabold text-[11px] uppercase">
-                    ✓ NO INTERACTION
-                  </span>
-                  <span class="text-xs sm:text-sm font-bold text-white">
-                    ${escapeHtml(drugU.name)} <span class="text-emerald-400 mx-1">+</span> ${escapeHtml(drugV.name)}
-                  </span>
-                </div>
-                <span class="text-[11px] text-emerald-300/90 font-medium">
-                  No documented interaction between these two drugs in the formulary.
-                </span>
-              </div>
-            `;
-          }
-
-          return matches.map(m => {
-            const meta = RISK_META[m.risk] || RISK_META.C;
-            const ingTxt = m.gIdx > 0 ? DB.ingreds[m.gIdx] : "";
-            return `
-              <div class="p-3.5 rounded-xl border-2 ${meta.borderCol} ${meta.cardBg} flex flex-col gap-2">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div class="flex items-center gap-2 flex-wrap">
-                    <span class="px-2.5 py-0.5 rounded-md ${meta.badgeBg} font-extrabold text-[11px] uppercase shadow">
-                      ⚠️ INTERACTION • RISK ${meta.code} (${meta.shortLabel})
-                    </span>
-                    <span class="text-xs sm:text-sm font-extrabold text-white">
-                      ${escapeHtml(drugU.name)} <span class="text-amber-400 mx-1">⇄</span> ${escapeHtml(drugV.name)}
-                    </span>
-                  </div>
-                  <span class="text-[10px] font-mono-code text-stone-300 px-2 py-0.5 rounded bg-stone-950/80 border border-stone-800">
-                    ${meta.title} • ${m.rawPairs} formulation pair(s)
-                  </span>
-                </div>
-                ${
-                  ingTxt
-                    ? `<div class="px-2.5 py-1 rounded bg-purple-950/70 border border-purple-500/50 text-purple-200 text-[11px] font-semibold">
-                         Duplicate Active Ingredient Prescribed: ${escapeHtml(ingTxt)}
-                       </div>`
-                    : ""
-                }
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 text-xs mt-1">
-                  <div class="lg:col-span-5 bg-stone-950/80 p-2.5 rounded-lg border border-stone-800">
-                    <div class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-0.5">Summary</div>
-                    <p class="text-stone-100 leading-relaxed">${escapeHtml(DB.summaries[m.sIdx])}</p>
-                  </div>
-                  <div class="lg:col-span-7 bg-stone-950/80 p-2.5 rounded-lg border border-stone-800">
-                    <div class="text-[10px] font-bold uppercase tracking-wider ${meta.textCol} mb-0.5">Clinical Management</div>
-                    <p class="text-stone-300 leading-relaxed">${formatManagementHtml(DB.managements[m.mIdx])}</p>
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join("");
-        }).join("");
-
-        return `
-          <div class="rounded-2xl bg-stone-950/90 border border-amber-700/50 p-4 flex flex-col gap-2.5 shadow-lg">
-            <div class="flex items-center justify-between border-b border-stone-800 pb-2.5">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-11 shrink-0">${createBottleSvg(drugU, "card")}</div>
-                <div>
-                  <div class="text-[10px] font-mono-code uppercase text-amber-400">Interactions for Basket Drug</div>
-                  <h5 class="text-sm sm:text-base font-extrabold text-white">${escapeHtml(drugU.name)}</h5>
-                </div>
-              </div>
-              <span class="text-xs text-stone-400 font-medium">
-                Checked against <strong class="text-amber-300">${otherIds.length}</strong> other drug(s) in basket
-              </span>
-            </div>
-            <div class="flex flex-col gap-2">
-              ${partnerRowsHtml}
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
     // Export Selected Drug's DDI List to CSV
     function exportCurrentDrugCsv() {
       const drugStat = DRUG_STATS[state.selectedDrugId];
@@ -2155,65 +2245,43 @@
       showToast(`Exported ${list.length} DDI records for ${drugStat.name}`, "emerald");
     }
 
-    // Export Basket Interactions to CSV
-    function exportBasketCsv() {
-      if (state.regimenBasket.length < 2) {
-        showToast("Add at least 2 drugs to the basket to export interactions", "rose");
+    // Export Direct Banner Interactions to CSV
+    function exportBannerInteractionsCsv() {
+      const { sortedInteractions } = computeBannerDirectDdiData();
+      if (sortedInteractions.length === 0) {
+        showToast("No active interactions between the added drugs to export", "rose");
         return;
       }
-      const rows = [["Drug_A", "Drug_B", "Has_Interaction", "Risk_Level", "Risk_Meaning", "Same_Ingredients_Prescribed", "Summary", "Clinical_Management", "Formulation_Pair_Count"]];
-      for (let i = 0; i < state.regimenBasket.length; i++) {
-        for (let j = i + 1; j < state.regimenBasket.length; j++) {
-          const u = state.regimenBasket[i];
-          const v = state.regimenBasket[j];
-          const matches = (ADJ[u] || []).filter(edge => edge.partnerId === v);
-          if (matches.length === 0) {
-            rows.push([DB.drugs[u], DB.drugs[v], "NO", "NONE", "No Interaction Found", "", "No documented interaction", "", "0"]);
-          } else {
-            matches.forEach(m => {
-              const meta = RISK_META[m.risk] || RISK_META.C;
-              rows.push([
-                DB.drugs[u],
-                DB.drugs[v],
-                "YES",
-                m.risk,
-                meta.title,
-                m.gIdx > 0 ? DB.ingreds[m.gIdx] : "",
-                DB.summaries[m.sIdx],
-                DB.managements[m.mIdx].replace(/<\/?i>/gi, ""),
-                String(m.rawPairs)
-              ]);
-            });
-          }
-        }
-      }
+      const rows = [["Primary_Drug_Higher_Risk", "Secondary_Drug", "Risk_Level", "Risk_Meaning", "Same_Ingredients_Prescribed", "Summary", "Clinical_Management", "Formulation_Pair_Count"]];
+      sortedInteractions.forEach(item => {
+        const meta = RISK_META[item.risk] || RISK_META.C;
+        rows.push([
+          DB.drugs[item.primaryId],
+          DB.drugs[item.secondaryId],
+          item.risk,
+          meta.title,
+          item.gIdx > 0 ? DB.ingreds[item.gIdx] : "",
+          DB.summaries[item.sIdx],
+          DB.managements[item.mIdx].replace(/<\/?i>/gi, ""),
+          String(item.rawPairs)
+        ]);
+      });
       const csvContent = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "counter_basket_interactions.csv";
+      a.download = "direct_ddi_interactions.csv";
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      showToast("Exported Counter Basket interaction report to CSV!", "emerald");
-    }
-
-    function populateBasketSelectOptions(filterText = "") {
-      const regSelect = document.getElementById("regimen-add-select");
-      if (!regSelect) return;
-      const q = filterText.trim().toUpperCase();
-      const matches = DRUG_STATS.filter(d => !q || d.name.toUpperCase().includes(q));
-      const list = matches.length > 0 ? matches : DRUG_STATS;
-      regSelect.innerHTML = list.map(d => {
-        const inB = state.regimenBasket.includes(d.id);
-        return `<option value="${d.id}">${escapeHtml(d.name)} ${inB ? "(Already in Basket ✓)" : ""}</option>`;
-      }).join("");
+      showToast("Exported Direct DDI Banner interactions to CSV!", "emerald");
     }
 
     // Wire Up All Interactive Controls
     function bindEvents() {
+      // 1. Header Shelf Search Input
       const searchInput = document.getElementById("drug-search-input");
       const acBox = document.getElementById("search-autocomplete");
 
@@ -2247,9 +2315,60 @@
         renderShelves();
       });
 
+      // 2. Top Banner Direct DDI Search Input & Controls
+      const bannerInput = document.getElementById("banner-drug-search-input");
+      const bannerAc = document.getElementById("banner-search-autocomplete");
+      const bannerClearInputBtn = document.getElementById("banner-clear-input-btn");
+
+      bannerInput.addEventListener("input", e => {
+        renderBannerSearchAutocomplete(e.target.value);
+      });
+
+      bannerInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          triggerBannerAddDrug();
+        } else if (e.key === "Escape") {
+          bannerAc.classList.add("hidden");
+        }
+      });
+
+      bannerClearInputBtn.addEventListener("click", () => {
+        bannerInput.value = "";
+        bannerAc.classList.add("hidden");
+        bannerClearInputBtn.classList.add("hidden");
+        bannerInput.focus();
+      });
+
+      document.getElementById("banner-add-drug-btn").addEventListener("click", () => {
+        triggerBannerAddDrug();
+      });
+
+      document.getElementById("banner-clear-all-btn").addEventListener("click", () => {
+        state.regimenBasket = [];
+        renderShelves();
+        renderDispensedDrugCounter();
+        renderDdiExplorer();
+        renderDirectDdiBanner();
+        showToast("Cleared all drugs from the Direct DDI Banner");
+      });
+
+      document.getElementById("banner-export-csv-btn").addEventListener("click", () => {
+        exportBannerInteractionsCsv();
+      });
+
+      document.getElementById("focus-banner-search-btn").addEventListener("click", () => {
+        const bannerEl = document.getElementById("direct-ddi-banner");
+        if (bannerEl) bannerEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        bannerInput.focus();
+      });
+
       document.addEventListener("click", e => {
         if (!searchInput.contains(e.target) && !acBox.contains(e.target)) {
           acBox.classList.add("hidden");
+        }
+        if (!bannerInput.contains(e.target) && !bannerAc.contains(e.target)) {
+          bannerAc.classList.add("hidden");
         }
       });
 
@@ -2328,17 +2447,10 @@
       document.getElementById("pin-to-regimen-btn").addEventListener("click", () => {
         const id = state.selectedDrugId;
         if (state.regimenBasket.includes(id)) {
-          state.regimenBasket = state.regimenBasket.filter(x => x !== id);
-          if (state.basketFocusDrugId === id) state.basketFocusDrugId = "ALL";
-          showToast(`Removed ${DRUG_STATS[id].name} from Counter Basket`);
+          removeDrugFromDirectBanner(id);
         } else {
-          state.regimenBasket.push(id);
-          showToast(`Added ${DRUG_STATS[id].name} to Counter Basket`, "emerald");
+          addDrugToDirectBanner(id, false);
         }
-        renderShelves();
-        renderDispensedDrugCounter();
-        renderDdiExplorer();
-        renderRegimenModal();
       });
 
       document.getElementById("replay-dispense-btn").addEventListener("click", () => {
@@ -2347,78 +2459,6 @@
 
       document.getElementById("export-csv-btn").addEventListener("click", () => {
         exportCurrentDrugCsv();
-      });
-
-      document.getElementById("counter-clear-basket-btn").addEventListener("click", () => {
-        state.regimenBasket = [];
-        state.basketFocusDrugId = "ALL";
-        renderShelves();
-        renderDispensedDrugCounter();
-        renderDdiExplorer();
-        renderRegimenModal();
-        showToast("Cleared Counter Basket");
-      });
-
-      // Open Counter Basket Modal (from Header or Counter CTA)
-      const openBasketModal = () => {
-        populateBasketSelectOptions(document.getElementById("regimen-filter-input")?.value || "");
-        renderRegimenModal();
-        document.getElementById("regimen-modal").classList.remove("hidden");
-      };
-
-      document.getElementById("open-regimen-modal-btn").addEventListener("click", openBasketModal);
-      document.getElementById("counter-open-basket-cta").addEventListener("click", openBasketModal);
-
-      document.getElementById("close-regimen-modal-btn").addEventListener("click", () => {
-        document.getElementById("regimen-modal").classList.add("hidden");
-      });
-
-      document.getElementById("clear-regimen-btn").addEventListener("click", () => {
-        state.regimenBasket = [];
-        state.basketFocusDrugId = "ALL";
-        renderShelves();
-        renderDispensedDrugCounter();
-        renderDdiExplorer();
-        renderRegimenModal();
-      });
-
-      document.getElementById("export-basket-csv-btn").addEventListener("click", () => {
-        exportBasketCsv();
-      });
-
-      // Inside Basket Modal: Filter & Add Drug by Name
-      const regFilterInput = document.getElementById("regimen-filter-input");
-      if (regFilterInput) {
-        regFilterInput.addEventListener("input", e => {
-          populateBasketSelectOptions(e.target.value);
-        });
-      }
-
-      document.getElementById("regimen-add-btn").addEventListener("click", () => {
-        const regSelect = document.getElementById("regimen-add-select");
-        if (!regSelect || !regSelect.value) return;
-        const chosenId = parseInt(regSelect.value, 10);
-        if (!state.regimenBasket.includes(chosenId)) {
-          state.regimenBasket.push(chosenId);
-          state.selectedDrugId = chosenId;
-          playApothecarySound("dispense");
-          renderShelves();
-          renderDispensedDrugCounter();
-          renderDdiExplorer();
-          populateBasketSelectOptions(regFilterInput?.value || "");
-          renderRegimenModal();
-          showToast(`Added ${DB.drugs[chosenId]} to Counter Basket`, "emerald");
-        } else {
-          showToast(`${DB.drugs[chosenId]} is already in your Counter Basket`);
-        }
-      });
-
-      document.getElementById("run-basket-check-btn").addEventListener("click", () => {
-        playApothecarySound("click");
-        renderRegimenModal();
-        const resultsEl = document.getElementById("regimen-interactions-list");
-        if (resultsEl) resultsEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        showToast("Checked interactions for all drugs in your Counter Basket!", "emerald");
       });
 
       // Sound Toggle
@@ -2447,7 +2487,7 @@
 
       if (match) {
         dispenseDrugFromShelf(match.id, null, false, false);
-        showToast(`Dispensed ${match.name} to the counter! Click "Add to Counter Basket" to add it to your basket.`);
+        showToast(`Dispensed ${match.name} to the counter!`);
       } else {
         showToast(`No drug matching "${q}" found in Formulary.`, "rose");
       }
@@ -2497,16 +2537,14 @@
       renderQuickDispenseChips();
       bindEvents();
 
-      // Default initial selection: FAVIPIRAVIR dispensed on counter; Counter Basket starts empty until user clicks "Add to Counter Basket"
       const favipiravir = DRUG_STATS.find(d => d.name.toUpperCase() === "FAVIPIRAVIR") || DRUG_STATS[0];
       state.selectedDrugId = favipiravir.id;
       state.regimenBasket = [];
 
-      populateBasketSelectOptions("");
       ensureDrugVisibleOnShelf(favipiravir.id);
       renderDispensedDrugCounter();
       renderDdiExplorer();
-      renderRegimenModal();
+      renderDirectDdiBanner();
 
       if (window.lucide) {
         window.lucide.createIcons();
